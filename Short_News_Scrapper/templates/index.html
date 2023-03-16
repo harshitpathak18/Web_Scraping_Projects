@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>News</title>
+  </head>
+  <body class="bg-dark">
+
+    <div class="container p-2">
+        <h1 class="text-center font-monospace text-white sticky-lg-top">News In Short</h1>
+    </div>
+
+
+    <div class="container">
+        
+        <ul class="nav nav-pills m-4">
+            <li class="nav-item m-1">
+                <a href="{{url_for('index')}}" class="btn-success btn ">All News</a>
+            </li>
+            
+            <li class="nav-item m-1">
+                <a href="{{url_for('india')}}" class="btn-success btn ">India</a>
+            </li>
+
+            <li class="nav-item m-1">
+                <a href="{{url_for('business')}}" class="btn-success btn ">Buisness</a>
+            </li>
+
+            <li class="nav-item m-1">
+                <a href="{{url_for('sports')}}" class="btn-success btn ">Sports</a>
+            </li>
+
+            <li class="nav-item m-1">
+                <a href="{{url_for('world')}}" class="btn-success btn ">World</a>
+            </li>
+            
+            <li class="nav-item m-1">
+                <a href="{{url_for('politics')}}" class="btn-success btn ">Politics</a>
+            </li>
+
+            <li class="nav-item m-1">
+                <a href="{{url_for('tech')}}" class="btn-success btn ">Technology</a>
+            </li>
+
+            <li class="nav-item m-1">
+                <a href="{{url_for('startup')}}" class="btn-success btn ">Startup</a>
+            </li>
+
+            <li class="nav-item m-1">
+                <a href="{{url_for('entertainment')}}" class="btn-success btn ">Entertainment</a>
+            </li>
+            
+            <li class="nav-item m-1">
+                <a href="{{url_for('hatke')}}" class="btn-success btn ">Hatke</a>
+            </li>
+            
+            <li class="nav-item m-1">
+                <a href="{{url_for('science')}}" class="btn-success btn ">Science</a>
+            </li>
+
+            <li class="nav-item m-1">
+                <a href="{{url_for('automobile')}}" class="btn-success btn ">Automobile</a>
+            </li>
+            
+        </ul>
+
+
+        <ul class="list-group " style="list-style-type: none;">
+
+
+            {% for index,data in data.items() %}
+                <li class="list-group-item d-flex justify-content-between  bg-white" >
+                
+                    <span class="container-lg">
+                        <div class="row align-items-start">
+                            <div class="col-5">
+                                <img class="img-fluid w-75" src="{{data.img}}" alt="" style="width: 250px; height: 250px;">
+                            </div>
+
+                            <div class="col-9 text-black w-50 align-content-lg-stretch">
+                                    <h3>{{data.heading}}</h2>
+                                        {{data.news}}
+                            </div>
+                        </div>
+                        
+                    </span>
+                </li>
+            {% endfor %}
+
+            
+        </ul>
+    </div>
+        
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>
