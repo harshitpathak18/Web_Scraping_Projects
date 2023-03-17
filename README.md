@@ -1,2 +1,4 @@
 # Web_Scraping_Projects
-### link of flipkart_review_web_scraping: https://flipkartwebscrapper.harshitpathak1.repl.co/
+### link of Flipkart Reviews Scrapper : https://flipkartwebscrapper.harshitpathak1.repl.co/
+### link of Short News SCrapper: https://short-news-scrapper.harshitpathak1.repl.co/
+
