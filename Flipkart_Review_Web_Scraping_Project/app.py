@@ -1,38 +1,99 @@
 from flask import Flask,request,render_template
 from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen
+import requests
+
+def flipkart(search):
+    search=search.replace(" ","+")
+    link=f"https://www.flipkart.com/search?q={search}&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off"
+    
+    
+    try:
+        try:
+            req=urlopen(link)
+            clean_html=bs(req.read(),'html.parser')
+            a=clean_html.find_all('div',{"class":"_4ddWXP"})
+            product_price=a[0].find('div',{"class":"_25b18c"}).div.text
+            product_name=a[0].find('a',{"class":"s1Q9rs"}).text
+            product_link="https://www.flipkart.com"+a[0].find('a',{"class":"s1Q9rs"})['href']
+            product_image=a[0].find('img',{"class":"_396cs4"})['src']
+            product_rating=a[0].find('div',{"class":"gUuXy- _2D5lwg"}).span.div.text
+            product_total_rating=a[0].find('div',{"class":"gUuXy- _2D5lwg"}).find('span',{"class":"_2_R_DZ"}).text
+            product_total_rating=product_total_rating.replace('(','')
+            product_total_rating=product_total_rating.replace(')','')
+            
+            
+            
+            extracted_data={}
+            try:
+                count=0
+                for i in a:
+                    product_total_rating=i.find('div',{"class":"gUuXy- _2D5lwg"}).find('span',{"class":"_2_R_DZ"}).text
+                    product_total_rating=product_total_rating.replace('(','')
+                    product_total_rating=product_total_rating.replace(')','')
+                    
+                    extracted_data.setdefault(count,{
+                        "link": "https://www.flipkart.com"+i.find('a',{"class":"s1Q9rs"})['href'],
+                        "img": i.find('img',{"class":"_396cs4"})['src'],
+                        "name": (i.find('a',{"class":"s1Q9rs"}).text),
+                        "rating": (i.find('div',{"class":"gUuXy- _2D5lwg"}).span.div.text),
+                        "price" :(i.find('div',{"class":"_25b18c"}).div.text),
+                        "total_ratings": product_total_rating
+                    })
+                    count=count+1
+
+            except Exception:
+                pass
+            
+            
+            
+            
+
+        except Exception:
+            a=clean_html.find_all('div',{"class":"_2kHMtA"})
+            product_price=a[1].find('div',{"class":"_30jeq3 _1_WHN1"}).text
+            product_name=a[1].find('div',{"class":"_4rR01T"}).text
+            product_link="https://www.flipkart.com"+a[0].a['href']
+            product_image=a[1].find('img',{"class":"_396cs4"})['src']
+            product_rating=a[1].find('div',{"class":"_3LWZlK"}).text
+            product_total_rating=a[1].find('span',{"class":"_2_R_DZ"}).span.span.text
+            product_total_rating=product_total_rating.replace(' Ratings\xa0','')
+            
+            
+            extracted_data={}
+            try:
+                count=0
+                for i in a:
+                    product_total_rating=a[1].find('span',{"class":"_2_R_DZ"}).span.span.text
+                    product_total_rating=product_total_rating.replace(' Ratings\xa0','')
+                    
+                    extracted_data.setdefault(count,{
+                        "link": "https://www.flipkart.com"+i.a['href'],
+                        "img": i.find('img',{"class":"_396cs4"})['src'],
+                        "name": (i.find('div',{"class":"_4rR01T"}).text),
+                        "rating": (i.find('div',{"class":"_3LWZlK"}).text),
+                        "price" :(i.find('div',{"class":"_30jeq3 _1_WHN1"}).text),
+                        "total_ratings": product_total_rating
+                    })
+                    count=count+1
+
+            except Exception:
+                pass
+            
+        return extracted_data
+    
+    except Exception:
+        pass
+
 
 app=Flask(__name__)
 
-global searched
 
 @app.route("/", methods=['GET','POST'])
 def index():
     if request.method=="POST":
         searched=request.form['search']
-        
-        link="https://www.flipkart.com/search?q="+searched.replace(" ",'-')+"&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off&as-pos=1&as-type=HISTORY&as-backfill=on"
-        products_=urlopen(link).read()
-        products_html=bs(products_,'html.parser')  # beautify html
-        product_container=products_html.find_all('div',{"class":"_1AtVbE col-12-12"})
-        del product_container[0:3]  # useless 
-        
-        
-        extracted_data={}
-        try:
-            count=0
-            for i in product_container:
-                extracted_data.setdefault(count,{
-                    "link": ("https://www.flipkart.com"+i.div.div.div.a['href']),
-                    "img": (i.div.div.div.a.div.div.div.div.img['src']),
-                    "name": (i.div.div.div.a.find('div',{"class": "_3pLy-c row"}).div.div.text),
-                    "rating": (i.div.div.div.a.find('div',{"class": "_3pLy-c row"}).div.find('div',{"class": "_3LWZlK"}).text),
-                    "price" :(i.div.div.div.a.find('div',{"class": "col col-5-12 nlI3QM"}).div.div.div.text)
-                })
-                count=count+1
-                
-        except Exception as e:
-            pass
+        extracted_data=flipkart(searched)
         
         return render_template('index.html',data=extracted_data)
         
@@ -72,4 +133,4 @@ def reviews():
 
 
 if __name__=="__main__":
-    app.run()
+    app.run(debug=True)
