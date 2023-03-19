@@ -64,7 +64,7 @@ def flipkart(search):
             try:
                 count=0
                 for i in a:
-                    product_total_rating=a[1].find('span',{"class":"_2_R_DZ"}).span.span.text
+                    product_total_rating=i.find('span',{"class":"_2_R_DZ"}).span.span.text
                     product_total_rating=product_total_rating.replace(' Ratings\xa0','')
                     
                     extracted_data.setdefault(count,{
